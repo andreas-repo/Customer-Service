@@ -33,6 +33,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Response createCustomer(Customer customer) {
         Response response = Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        try {
+            customerData = customerDataDeserializer.doDeserialization(customerData);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         if(customerData == null) {
             customerData = new CustomerData();
             List<Customer> customerList = customerData.getCustomerDataList();
@@ -50,10 +55,25 @@ public class CustomerServiceImpl implements CustomerService {
             try {
                 customerData = customerDataDeserializer.doDeserialization(customerData);
                 List<Customer> customerList = customerData.getCustomerDataList();
-                customerList.add(customer);
-                customerData.setCustomerDataList(customerList);
-                customerDataSerializer.doSerialization(customerData);
-                response = Response.ok("Successful customer created and saved!").status(Response.Status.OK.getStatusCode()).build();
+                boolean check = true;
+                for (Customer cust :
+                     customerList) {
+
+                    if(cust.getCustomerId().equals(customer.getCustomerId())) {
+                        check = false;
+                        break;
+                    }
+
+                }
+                if(check) {
+                    customerList.add(customer);
+                    customerData.setCustomerDataList(customerList);
+                    customerDataSerializer.doSerialization(customerData);
+                    response = Response.ok("Successful customer created and saved!").status(Response.Status.OK.getStatusCode()).build();
+                } else if (check == false) {
+                    response = Response.status(Response.Status.CONFLICT.getStatusCode()).build();
+                }
+
             } catch (IOException e) {
                 logger.log(Logger.Level.ERROR, "Deserialization error!");
                 e.printStackTrace();
