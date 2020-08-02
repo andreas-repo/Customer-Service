@@ -22,16 +22,22 @@ public interface CustomerService {
     @Consumes(MediaType.APPLICATION_JSON)
     Response createCustomer(Customer customer);
 
-    @Path("/")
-    @PUT
+    @Path("/{id}")
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Response changeCustomer(Customer customer);
+    Response changeCustomer(@PathParam("id") String customerId,
+                            Customer customer);
 
     @Path("/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     Response deleteCustomer(@PathParam("id") String customerId);
+
+    @Path("/")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    Response deleteAllCustomers();
 
     @Path("/deactivateCustomer/{id}")
     @OPTIONS

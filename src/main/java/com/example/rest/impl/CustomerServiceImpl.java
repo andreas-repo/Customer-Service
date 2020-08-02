@@ -10,6 +10,7 @@ import org.jboss.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -101,12 +102,42 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Response changeCustomer(Customer customer) {
-        return null;
+    public Response changeCustomer(String customerId, Customer customer) {
+        Response response = Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        try {
+            customerData = customerDataDeserializer.doDeserialization(customerData);
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Logger.Level.ERROR, "Deserialization error!");
+            e.printStackTrace();
+        }
+        List<Customer> customerList = new ArrayList<>();
+        for (Customer cust :
+             customerData.getCustomerDataList()) {
+
+            if (cust.getCustomerId().equals(customerId)) {
+                cust = customer;
+                response = Response.ok("Customer successful changed! \n ").status(Response.Status.OK.getStatusCode()).build();
+                break;
+            }
+            customerList.add(cust);
+        }
+        customerData.setCustomerDataList(customerList);
+        try {
+            customerDataSerializer.doSerialization(customerData);
+        } catch (IOException e) {
+            logger.log(Logger.Level.ERROR, "Serialization failed!");
+            e.printStackTrace();
+        }
+        return response;
     }
 
     @Override
     public Response deleteCustomer(String customerId) {
+        return null;
+    }
+
+    @Override
+    public Response deleteAllCustomers() {
         return null;
     }
 
