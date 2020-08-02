@@ -25,9 +25,23 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Response getCustomer(String customerId) {
+        Response response = Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        try {
+            customerData = customerDataDeserializer.doDeserialization(customerData);
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Logger.Level.ERROR, "Deserialization error!");
+            e.printStackTrace();
+        }
+        for (Customer cust :
+                customerData.getCustomerDataList()
+             ) {
 
+            if(cust.getCustomerId().equals(customerId)) {
+                response = Response.ok(cust.toString()).status(Response.Status.OK.getStatusCode()).build();
+            }
 
-        return null;
+        }
+        return response;
     }
 
     @Override
