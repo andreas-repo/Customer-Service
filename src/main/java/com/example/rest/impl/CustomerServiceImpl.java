@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CustomerServiceImpl implements CustomerService {
+
     private final CustomerDataDeserializer customerDataDeserializer = new CustomerDataDeserializer();
     private final CustomerDataSerializer customerDataSerializer = new CustomerDataSerializer();
 
@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         for (Customer cust :
                 customerData.getCustomerDataList()
-             ) {
+        ) {
 
             if(cust.getCustomerId().equals(customerId)) {
                 response = Response.ok(cust.toString()).status(Response.Status.OK.getStatusCode()).build();
@@ -72,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
                 List<Customer> customerList = customerData.getCustomerDataList();
                 boolean check = true;
                 for (Customer cust :
-                     customerList) {
+                        customerList) {
 
                     if(cust.getCustomerId().equals(customer.getCustomerId())) {
                         check = false;
@@ -112,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         List<Customer> customerList = new ArrayList<>();
         for (Customer cust :
-             customerData.getCustomerDataList()) {
+                customerData.getCustomerDataList()) {
 
             if (cust.getCustomerId().equals(customerId)) {
                 cust = customer;
@@ -149,16 +149,4 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return response;
     }
-
-    @Override
-    public Response deactivateCustomer(String customerId) {
-        return null;
-    }
-
-    @Override
-    public Response activateCustomer(String customerId) {
-        return null;
-    }
-
-
 }
