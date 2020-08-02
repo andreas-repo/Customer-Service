@@ -138,7 +138,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Response deleteAllCustomers() {
-        return null;
+        Response response = Response.status(Response.Status.CONFLICT.getStatusCode()).build();
+        customerData = null;
+        try {
+            customerDataSerializer.doSerialization(customerData);
+            response = Response.ok("All customers successful deleted!").status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        } catch (IOException e) {
+            logger.log(Logger.Level.ERROR, "Serialization failed!");
+            e.printStackTrace();
+        }
+        return response;
     }
 
     @Override
